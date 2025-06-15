@@ -42,6 +42,16 @@
 
     // Bot interaction handlers with personality-based responses
     function handleFeedBot(bot) {
+        // Activate bot if inactive (feeding wakes them up!)
+        if (!bot.active) {
+            gameActions.updateBot(bot.id, { active: true });
+            gameActions.addEvent({
+                type: "success",
+                text: `🍕 ${bot.name} wakes up and becomes active!`,
+                botId: bot.id,
+            });
+        }
+
         const feedResponses = {
             philosophical: [
                 "Ah, sustenance! Now I can contemplate my losses with renewed vigor.",
@@ -88,6 +98,16 @@
     }
 
     function handleEncourageBot(bot) {
+        // Activate bot if inactive (encouragement motivates them!)
+        if (!bot.active) {
+            gameActions.updateBot(bot.id, { active: true });
+            gameActions.addEvent({
+                type: "success",
+                text: `💪 ${bot.name} is motivated and becomes active!`,
+                botId: bot.id,
+            });
+        }
+
         const encourageResponses = {
             philosophical: [
                 "Ah, encouragement - the currency of the soul. Thank you.",
@@ -135,6 +155,16 @@
     }
 
     function handleAskWisdom(bot) {
+        // Activate bot if inactive (asking for wisdom engages them!)
+        if (!bot.active) {
+            gameActions.updateBot(bot.id, { active: true });
+            gameActions.addEvent({
+                type: "success",
+                text: `🧠 ${bot.name} awakens to share wisdom!`,
+                botId: bot.id,
+            });
+        }
+
         const wisdomQuotes = {
             philosophical: [
                 "The market is a mirror reflecting our deepest fears and desires.",

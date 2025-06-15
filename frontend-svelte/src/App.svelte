@@ -58,7 +58,7 @@
                     level: 1,
                     experience: 0,
                     mood: "optimistic",
-                    isActive: true,
+                    isActive: false,
                     stats: {
                         balance: STARTING_BALANCE,
                         startingBalance: STARTING_BALANCE,

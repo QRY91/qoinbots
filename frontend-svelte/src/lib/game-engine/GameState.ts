@@ -80,16 +80,14 @@ export default class GameState extends EventTarget {
     // Initialize default state with proper typing
     this.state = {
       player: {
-        totalBots: 1,
-        totalBalance: STARTING_BALANCE,
+        totalBots: 0,
+        totalBalance: 0,
         totalTrades: 0,
         totalProfit: 0,
         daysPlayed: 0,
         cyclesSurvived: 0,
       },
-      bots: {
-        qoin: this.createDefaultBot(),
-      },
+      bots: {},
       market: this.createDefaultMarket(),
       unlocks: this.createDefaultUnlocks(),
       achievements: this.createDefaultAchievements(),
