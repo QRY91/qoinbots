@@ -1,0 +1,54 @@
+{
+  "name": "qoinbots",
+  "version": "1.0.0",
+  "description": "🤖 An addictive incremental idle game where philosophical AI trading bots teach you market psychology",
+  "main": "frontend/index.html",
+  "scripts": {
+    "start": "./play.sh",
+    "build": "./build.sh",
+    "serve": "npx serve frontend -p 3000",
+    "dev": "npx serve frontend -p 3000 --watch",
+    "test": "echo \"No tests yet - this is a browser game!\" && exit 0"
+  },
+  "keywords": [
+    "incremental-game",
+    "idle-game",
+    "trading-bots",
+    "ai-personalities",
+    "behavioral-finance",
+    "browser-game",
+    "educational-game",
+    "tamagotchi",
+    "cookie-clicker",
+    "market-simulation",
+    "javascript-game",
+    "trading-education"
+  ],
+  "author": "QOINbots Team",
+  "license": "MIT",
+  "homepage": "https://qoinbots.com",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/QRY91/qoinbots.git"
+  },
+  "bugs": {
+    "url": "https://github.com/QRY91/qoinbots/issues"
+  },
+  "engines": {
+    "node": ">=14.0.0"
+  },
+  "devDependencies": {
+    "serve": "^14.2.0"
+  },
+  "browserslist": [
+    "> 1%",
+    "last 2 versions",
+    "not dead"
+  ],
+  "files": [
+    "frontend/**/*",
+    "README.md",
+    "build.sh",
+    "play.sh"
+  ]
+}

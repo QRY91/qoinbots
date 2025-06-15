@@ -1,0 +1,70 @@
+# QOINbots - Trading Bot Collective
+# .gitignore for clean repository
+
+# Build outputs
+dist/
+build/
+*.tgz
+
+# Node.js
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.npm
+.yarn-integrity
+
+# Environment variables
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Logs
+logs
+*.log
+lerna-debug.log*
+
+# Runtime data
+pids
+*.pid
+*.seed
+*.pid.lock
+
+# Coverage directory used by tools like istanbul
+coverage/
+*.lcov
+
+# Operating System
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+Desktop.ini
+
+# IDE and Editors
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.sublime-workspace
+.sublime-project
+
+# Temporary files
+*.tmp
+*.temp
+.cache/
+
+# Game-specific
+# (Keep save data out of repo - players use localStorage)
+*.save
+*.backup
+
+# Optional: Keep these if you want to track them
+# But exclude if they get auto-generated
+# /frontend/assets/generated/

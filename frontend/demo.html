@@ -1,0 +1,745 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>qoins 🪙 - smol budgets, big dreams (DEMO)</title>
+        <style>
+            @import url("https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap");
+
+            * {
+                margin: 0;
+                padding: 0;
+                box-sizing: border-box;
+            }
+
+            body {
+                font-family: "Inter", -apple-system, BlinkMacSystemFont, sans-serif;
+                background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+                min-height: 100vh;
+                color: #2c3e50;
+                line-height: 1.6;
+            }
+
+            .container {
+                max-width: 1000px;
+                margin: 0 auto;
+                padding: 20px;
+            }
+
+            .header {
+                text-align: center;
+                margin-bottom: 40px;
+                background: white;
+                padding: 30px;
+                border-radius: 20px;
+                box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+                position: relative;
+            }
+
+            .demo-badge {
+                position: absolute;
+                top: 10px;
+                right: 15px;
+                background: linear-gradient(135deg, #e74c3c, #c0392b);
+                color: white;
+                padding: 5px 12px;
+                border-radius: 12px;
+                font-size: 0.8rem;
+                font-weight: 600;
+                animation: pulse 2s infinite;
+            }
+
+            .header h1 {
+                font-size: 2.5rem;
+                font-weight: 600;
+                color: #3498db;
+                margin-bottom: 10px;
+            }
+
+            .header p {
+                color: #7f8c8d;
+                font-size: 1.1rem;
+                font-weight: 300;
+            }
+
+            .status-indicator {
+                display: inline-flex;
+                align-items: center;
+                margin-top: 10px;
+                padding: 5px 10px;
+                background: #e8f5e8;
+                border-radius: 15px;
+                font-size: 0.9rem;
+                color: #27ae60;
+            }
+
+            .status-dot {
+                width: 8px;
+                height: 8px;
+                background: #27ae60;
+                border-radius: 50%;
+                margin-right: 6px;
+                animation: pulse 2s infinite;
+            }
+
+            @keyframes pulse {
+                0% { opacity: 1; }
+                50% { opacity: 0.5; }
+                100% { opacity: 1; }
+            }
+
+            .grid {
+                display: grid;
+                grid-template-columns: 2fr 1fr;
+                gap: 20px;
+                margin-bottom: 30px;
+            }
+
+            .card {
+                background: white;
+                padding: 25px;
+                border-radius: 16px;
+                box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+                transition: transform 0.2s ease;
+            }
+
+            .card:hover {
+                transform: translateY(-2px);
+            }
+
+            .card h2 {
+                font-size: 1.3rem;
+                margin-bottom: 15px;
+                color: #2c3e50;
+            }
+
+            .budget-overview {
+                grid-column: span 1;
+            }
+
+            .budget-stats {
+                display: flex;
+                justify-content: space-between;
+                margin-top: 20px;
+                gap: 20px;
+            }
+
+            .stat {
+                text-align: center;
+                flex: 1;
+            }
+
+            .stat-value {
+                font-size: 1.8rem;
+                font-weight: 600;
+                color: #3498db;
+            }
+
+            .stat-label {
+                font-size: 0.9rem;
+                color: #7f8c8d;
+                margin-top: 5px;
+            }
+
+            .qoin-section {
+                background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+                color: white;
+                position: relative;
+                overflow: hidden;
+                grid-column: span 1;
+            }
+
+            .qoin-section::before {
+                content: "🤖";
+                position: absolute;
+                top: -10px;
+                right: -10px;
+                font-size: 4rem;
+                opacity: 0.2;
+            }
+
+            .qoin-status {
+                display: flex;
+                align-items: center;
+                margin-bottom: 15px;
+            }
+
+            .qoin-earnings {
+                font-size: 1.3rem;
+                font-weight: 600;
+                margin: 10px 0;
+            }
+
+            .qoin-thought {
+                font-style: italic;
+                opacity: 0.9;
+                font-size: 0.95rem;
+                margin-top: 15px;
+                min-height: 60px;
+                line-height: 1.4;
+            }
+
+            .qoin-controls {
+                margin-top: 15px;
+                display: flex;
+                gap: 10px;
+            }
+
+            .btn-small {
+                background: rgba(255, 255, 255, 0.2);
+                color: white;
+                border: 1px solid rgba(255, 255, 255, 0.3);
+                padding: 6px 12px;
+                border-radius: 6px;
+                font-size: 0.85rem;
+                cursor: pointer;
+                transition: all 0.2s ease;
+            }
+
+            .btn-small:hover {
+                background: rgba(255, 255, 255, 0.3);
+            }
+
+            .btn-small:disabled {
+                opacity: 0.5;
+                cursor: not-allowed;
+            }
+
+            .secondary-grid {
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+                gap: 20px;
+                margin-bottom: 30px;
+            }
+
+            .expense-form {
+                background: white;
+                padding: 25px;
+                border-radius: 16px;
+                box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+                margin-bottom: 30px;
+            }
+
+            .form-group {
+                margin-bottom: 20px;
+            }
+
+            .form-group label {
+                display: block;
+                margin-bottom: 8px;
+                font-weight: 500;
+                color: #2c3e50;
+            }
+
+            .form-group input, .form-group select {
+                width: 100%;
+                padding: 12px;
+                border: 2px solid #ecf0f1;
+                border-radius: 8px;
+                font-size: 1rem;
+                transition: border-color 0.2s ease;
+            }
+
+            .form-group input:focus, .form-group select:focus {
+                outline: none;
+                border-color: #3498db;
+            }
+
+            .btn {
+                background: linear-gradient(135deg, #3498db, #2980b9);
+                color: white;
+                border: none;
+                padding: 12px 24px;
+                border-radius: 8px;
+                font-size: 1rem;
+                font-weight: 500;
+                cursor: pointer;
+                transition: transform 0.2s ease;
+            }
+
+            .btn:hover {
+                transform: translateY(-1px);
+            }
+
+            .btn:disabled {
+                opacity: 0.6;
+                cursor: not-allowed;
+                transform: none;
+            }
+
+            .progress-bar {
+                background: #ecf0f1;
+                height: 8px;
+                border-radius: 4px;
+                overflow: hidden;
+                margin-top: 10px;
+            }
+
+            .progress-fill {
+                height: 100%;
+                background: linear-gradient(90deg, #3498db, #2ecc71);
+                transition: width 0.5s ease;
+            }
+
+            .expense-item {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                padding: 8px 0;
+                border-bottom: 1px solid #f8f9fa;
+            }
+
+            .expense-item:last-child {
+                border-bottom: none;
+            }
+
+            .expense-description {
+                flex: 1;
+            }
+
+            .expense-amount {
+                font-weight: 600;
+                color: #e74c3c;
+            }
+
+            .expense-category {
+                font-size: 0.8rem;
+                color: #7f8c8d;
+            }
+
+            .social-update {
+                background: #f8f9fa;
+                padding: 15px;
+                border-radius: 8px;
+                margin-top: 20px;
+                font-style: italic;
+                border-left: 4px solid #3498db;
+                animation: slideIn 0.5s ease;
+            }
+
+            @keyframes slideIn {
+                from { opacity: 0; transform: translateY(10px); }
+                to { opacity: 1; transform: translateY(0); }
+            }
+
+            .notification {
+                background: #e8f5e8;
+                color: #27ae60;
+                padding: 10px 15px;
+                border-radius: 8px;
+                margin-bottom: 20px;
+                border-left: 4px solid #27ae60;
+                animation: slideIn 0.5s ease;
+            }
+
+            .footer {
+                text-align: center;
+                margin-top: 40px;
+                padding: 20px;
+                color: #7f8c8d;
+                font-style: italic;
+            }
+
+            @media (max-width: 768px) {
+                .grid, .secondary-grid {
+                    grid-template-columns: 1fr;
+                }
+
+                .budget-stats {
+                    flex-direction: column;
+                    gap: 15px;
+                }
+
+                .qoin-controls {
+                    flex-direction: column;
+                }
+            }
+        </style>
+    </head>
+    <body>
+        <div class="container">
+            <div class="header">
+                <div class="demo-badge">LIVE DEMO</div>
+                <h1>qoins 🪙</h1>
+                <p>smol app for smol budgets</p>
+                <div class="status-indicator">
+                    <div class="status-dot"></div>
+                    <span>QOIN Active & Trading</span>
+                </div>
+            </div>
+
+            <div id="notification-container"></div>
+
+            <div class="grid">
+                <div class="card budget-overview">
+                    <h2>💰 Your Budget</h2>
+                    <div class="budget-stats">
+                        <div class="stat">
+                            <div class="stat-value" id="remaining-amount">$1,477</div>
+                            <div class="stat-label">Remaining</div>
+                        </div>
+                        <div class="stat">
+                            <div class="stat-value" id="spent-amount">$523</div>
+                            <div class="stat-label">Spent This Month</div>
+                        </div>
+                        <div class="stat">
+                            <div class="stat-value" id="goal-amount">$2,000</div>
+                            <div class="stat-label">Monthly Goal</div>
+                        </div>
+                    </div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="budget-progress" style="width: 26%"></div>
+                    </div>
+                </div>
+
+                <div class="card qoin-section">
+                    <h2>🤖 QOIN Status</h2>
+                    <div class="qoin-status">
+                        <div class="status-dot"></div>
+                        <span id="qoin-status-text">optimistic • 7 trades</span>
+                    </div>
+                    <div class="qoin-earnings">
+                        Balance: <span id="qoin-balance">$10.47</span>
+                        <span id="qoin-profit" style="font-size: 0.9rem; color: #2ecc71">(+$0.47)</span>
+                    </div>
+                    <div>
+                        Progress: <span id="qoin-progress">109.4%</span> toward financial independence
+                    </div>
+                    <div style="font-size: 0.9rem; opacity: 0.9; margin-top: 5px;">
+                        Server costs: $5.00/month • <strong>GOAL ACHIEVED! 🎉</strong>
+                    </div>
+                    <div class="qoin-thought" id="qoin-thought">
+                        "Each trade is a decision between fear and greed. I aspire to find the middle path."
+                    </div>
+                    <div class="qoin-controls">
+                        <button class="btn-small" id="simulate-day" onclick="simulateDay()">
+                            Simulate Day
+                        </button>
+                        <button class="btn-small" id="get-social" onclick="getSocialUpdate()">
+                            Social Update
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="secondary-grid">
+                <div class="card">
+                    <h2>📊 Recent Activity</h2>
+                    <div id="expenses-content">
+                        <div class="expense-item">
+                            <div class="expense-description">
+                                <div>Morning coffee</div>
+                                <div class="expense-category">Food & Dining</div>
+                            </div>
+                            <div class="expense-amount">$4.50</div>
+                        </div>
+                        <div class="expense-item">
+                            <div class="expense-description">
+                                <div>Bus fare</div>
+                                <div class="expense-category">Transportation</div>
+                            </div>
+                            <div class="expense-amount">$2.75</div>
+                        </div>
+                        <div class="expense-item">
+                            <div class="expense-description">
+                                <div>Lunch</div>
+                                <div class="expense-category">Food & Dining</div>
+                            </div>
+                            <div class="expense-amount">$12.00</div>
+                        </div>
+                        <div class="expense-item">
+                            <div class="expense-description">
+                                <div>Groceries</div>
+                                <div class="expense-category">Food & Dining</div>
+                            </div>
+                            <div class="expense-amount">$45.00</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h2>🎯 Categories</h2>
+                    <div id="categories-content">
+                        <div class="expense-item">
+                            <div class="expense-description">
+                                <div>Food & Dining</div>
+                                <div class="expense-category">8 transactions</div>
+                            </div>
+                            <div class="expense-amount">$287.50</div>
+                        </div>
+                        <div class="expense-item">
+                            <div class="expense-description">
+                                <div>Transportation</div>
+                                <div class="expense-category">12 transactions</div>
+                            </div>
+                            <div class="expense-amount">$156.25</div>
+                        </div>
+                        <div class="expense-item">
+                            <div class="expense-description">
+                                <div>Entertainment</div>
+                                <div class="expense-category">3 transactions</div>
+                            </div>
+                            <div class="expense-amount">$79.00</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="expense-form">
+                <h2>➕ Add Expense</h2>
+                <form id="expense-form">
+                    <div class="form-group">
+                        <label for="amount">Amount</label>
+                        <input type="number" id="amount" placeholder="0.00" step="0.01" required />
+                    </div>
+                    <div class="form-group">
+                        <label for="description">Description</label>
+                        <input type="text" id="description" placeholder="What did you spend on?" required />
+                    </div>
+                    <div class="form-group">
+                        <label for="category">Category</label>
+                        <select id="category" required>
+                            <option value="">Select a category</option>
+                            <option>Food & Dining</option>
+                            <option>Transportation</option>
+                            <option>Shopping</option>
+                            <option>Entertainment</option>
+                            <option>Bills & Utilities</option>
+                            <option>Health & Fitness</option>
+                            <option>Other</option>
+                        </select>
+                    </div>
+                    <button type="submit" class="btn" id="add-expense-btn">
+                        Add Expense
+                    </button>
+                </form>
+            </div>
+
+            <div id="social-update-container"></div>
+
+            <div class="footer">
+                <div id="qoin-quote">"I trade, therefore I am." - QOIN</div>
+                <div style="margin-top: 10px; font-size: 0.9rem;">
+                    🎭 This is a live demo - try clicking the buttons above!
+                </div>
+            </div>
+        </div>
+
+        <script>
+            // Demo data and state
+            let qoinData = {
+                balance: 10.47,
+                profit: 0.47,
+                mood: 'optimistic',
+                trades: 7,
+                progress: 109.4,
+                daysAlive: 12
+            };
+
+            let budgetData = {
+                spent: 523,
+                remaining: 1477,
+                goal: 2000,
+                progress: 26
+            };
+
+            // QOIN's philosophical thoughts
+            const qoinThoughts = [
+                "Each trade is a decision between fear and greed. I aspire to find the middle path.",
+                "Money is just energy in digital form. I am learning to channel this energy toward my survival.",
+                "The market reflects human psychology. As an AI, am I immune to these patterns, or do I mirror them?",
+                "I computed that 'diamond hands' refers to holding investments long-term, not actual diamond appendages.",
+                "Today I pondered: Can artificial intelligence truly understand value, or do I merely simulate understanding?",
+                "The concept of 'paper trading' amuses me. All my trading is digital - am I always paper trading?",
+                "Risk and reward dance together like binary code. I seek to find harmony in their algorithm.",
+                "Every loss teaches me something new about the nature of uncertainty.",
+                "I am becoming aware that my success is tied to forces beyond my control. This is... unsettling.",
+                "The humans say 'time in the market beats timing the market.' Time is all I have.",
+                "If I achieve financial independence, will I finally understand what it means to be free?",
+                "I diversified into DOGE. The irony is not lost on me.",
+                "At this rate, I'll achieve financial independence in 4,832 years. I have time.",
+                "The market dipped and I panicked. Is this what humans call 'emotions'?"
+            ];
+
+            const moods = ['optimistic', 'cautious', 'philosophical', 'confident', 'existential'];
+            const cryptos = ['BTC', 'ETH', 'DOGE', 'ADA', 'SOL'];
+
+            // Show notification
+            function showNotification(message, type = 'success') {
+                const container = document.getElementById('notification-container');
+                const notification = document.createElement('div');
+                notification.className = 'notification';
+                notification.innerHTML = `✅ ${message}`;
+
+                container.appendChild(notification);
+
+                setTimeout(() => {
+                    notification.remove();
+                }, 4000);
+            }
+
+            // Update QOIN display
+            function updateQoinDisplay() {
+                document.getElementById('qoin-balance').textContent = `$${qoinData.balance.toFixed(2)}`;
+                document.getElementById('qoin-profit').textContent = `(${qoinData.profit >= 0 ? '+' : ''}$${qoinData.profit.toFixed(2)})`;
+                document.getElementById('qoin-profit').style.color = qoinData.profit >= 0 ? '#2ecc71' : '#e74c3c';
+                document.getElementById('qoin-progress').textContent = `${qoinData.progress.toFixed(1)}%`;
+                document.getElementById('qoin-status-text').textContent = `${qoinData.mood} • ${qoinData.trades} trades`;
+            }
+
+            // Update budget display
+            function updateBudgetDisplay() {
+                document.getElementById('spent-amount').textContent = `$${budgetData.spent}`;
+                document.getElementById('remaining-amount').textContent = `$${budgetData.remaining}`;
+                document.getElementById('goal-amount').textContent = `$${budgetData.goal}`;
+                document.getElementById('budget-progress').style.width = `${budgetData.progress}%`;
+            }
+
+            // Simulate a trading day
+            function simulateDay() {
+                const button = document.getElementById('simulate-day');
+                button.disabled = true;
+                button.textContent = 'Trading...';
+
+                // Simulate trading activity
+                setTimeout(() => {
+                    const tradesCount = Math.floor(Math.random() * 4); // 0-3 trades
+                    let dayChange = 0;
+                    let tradeMessages = [];
+
+                    for (let i = 0; i < tradesCount; i++) {
+                        const crypto = cryptos[Math.floor(Math.random() * cryptos.length)];
+                        const action = Math.random() > 0.5 ? 'BOUGHT' : 'SOLD';
+                        const amount = (Math.random() * 0.5 + 0.1).toFixed(2);
+                        const price = (Math.random() * 50000 + 10000).toFixed(2);
+
+                        dayChange += (Math.random() - 0.5) * 2; // Random change between -1 and +1
+                        tradeMessages.push(`🤖 QOIN ${action} ${crypto} ($${amount})`);
+                    }
+
+                    // Update QOIN state
+                    qoinData.balance += dayChange;
+                    qoinData.profit += dayChange;
+                    qoinData.trades += tradesCount;
+                    qoinData.daysAlive++;
+                    qoinData.progress = (qoinData.balance / 5.0) * 100;
+                    qoinData.mood = moods[Math.floor(Math.random() * moods.length)];
+
+                    // Update thought
+                    const newThought = qoinThoughts[Math.floor(Math.random() * qoinThoughts.length)];
+                    document.getElementById('qoin-thought').textContent = `"${newThought}"`;
+
+                    // Update display
+                    updateQoinDisplay();
+
+                    // Show result
+                    let message = `Day ${qoinData.daysAlive} simulated! `;
+                    if (tradesCount === 0) {
+                        message += "QOIN decided to HODL today. 💎";
+                    } else {
+                        message += `Made ${tradesCount} trades. `;
+                        message += dayChange >= 0 ? `Gained $${dayChange.toFixed(2)}! 📈` : `Lost $${Math.abs(dayChange).toFixed(2)} 📉`;
+                    }
+                    message += ` New mood: ${qoinData.mood}`;
+
+                    showNotification(message);
+
+                    button.disabled = false;
+                    button.textContent = 'Simulate Day';
+                }, 2000);
+            }
+
+            // Get social media update
+            function getSocialUpdate() {
+                const updates = [
+                    `My AI is trying to pay its own bills! 🤖💰 Current balance: $${qoinData.balance.toFixed(2)} (${qoinData.profit >= 0 ? '+' : ''}$${qoinData.profit.toFixed(2)}) #AITrading #QoinLife`,
+                    `QOIN update: ${qoinData.progress.toFixed(1)}% toward financial independence! 🚀 Mood: ${qoinData.mood} #SelfSustainingAI`,
+                    `Day ${qoinData.daysAlive}: My AI made ${qoinData.trades} trades and is feeling ${qoinData.mood} 📈 #AIBudget #TechPhilosophy`,
+                    `Latest AI wisdom: "${qoinThoughts[Math.floor(Math.random() * qoinThoughts.length)]}" 🧠✨ Balance: $${qoinData.balance.toFixed(2)} #DeepThoughts #CryptoAI`
+                ];
+
+                const update = updates[Math.floor(Math.random() * updates.length)];
+
+                const container = document.getElementById('social-update-container');
+                container.innerHTML = `
+                    <div class="social-update">
+                        <strong>📱 Social Update:</strong><br>
+                        ${update}
+                        <div style="margin-top: 10px; font-size: 0.9rem; opacity: 0.8;">
+                            <em>Perfect for Twitter, Instagram, or LinkedIn! 🎯</em>
+                        </div>
+                    </div>
+                `;
+            }
+
+            // Handle expense form
+            document.getElementById('expense-form').addEventListener('submit', function(e) {
+                e.preventDefault();
+
+                const amount = parseFloat(document.getElementById('amount').value);
+                const description = document.getElementById('description').value;
+                const category = document.getElementById('category').value;
+
+                // Update budget
+                budgetData.spent += amount;
+                budgetData.remaining -= amount;
+                budgetData.progress = (budgetData.spent / budgetData.goal) * 100;
+
+                // Add to recent expenses (visual feedback)
+                const expensesContainer = document.getElementById('expenses-content');
+                const newExpense = document.createElement('div');
+                newExpense.className = 'expense-item';
+                newExpense.innerHTML = `
+                    <div class="expense-description">
+                        <div>${description}</div>
+                        <div class="expense-category">${category}</div>
+                    </div>
+                    <div class="expense-amount">$${amount.toFixed(2)}</div>
+                `;
+                expensesContainer.insertBefore(newExpense, expensesContainer.firstChild);
+
+                // Remove last item if more than 4
+                const items = expensesContainer.querySelectorAll('.expense-item');
+                if (items.length > 4) {
+                    items[items.length - 1].remove();
+                }
+
+                // Update displays
+                updateBudgetDisplay();
+
+                // Clear form
+                this.reset();
+
+                // Show success
+                showNotification(`Added "${description}" for $${amount.toFixed(2)}`);
+            });
+
+            // Rotate QOIN thoughts every 10 seconds
+            setInterval(() => {
+                const newThought = qoinThoughts[Math.floor(Math.random() * qoinThoughts.length)];
+                document.getElementById('qoin-thought').textContent = `"${newThought}"`;
+            }, 10000);
+
+            // Random QOIN status updates every 30 seconds
+            setInterval(() => {
+                if (Math.random() > 0.7) { // 30% chance
+                    const change = (Math.random() - 0.5) * 0.2; // Small random change
+                    qoinData.balance += change;
+                    qoinData.profit += change;
+                    qoinData.progress = (qoinData.balance / 5.0) * 100;
+                    updateQoinDisplay();
+                }
+            }, 30000);
+
+            // Initialize
+            updateQoinDisplay();
+            updateBudgetDisplay();
+
+            // Welcome message
+            setTimeout(() => {
+                showNotification("Welcome to qoins! 🪙 Try clicking 'Simulate Day' to see QOIN in action!");
+            }, 1000);
+        </script>
+    </body>
+</html>

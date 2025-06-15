@@ -1,0 +1,564 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>🤖 QOINbots - The Trading Bot Collective</title>
+
+        <!-- SEO and Social Media Meta Tags -->
+        <meta name="description" content="An addictive incremental idle game where philosophical AI trading bots teach you market psychology. Cookie Clicker meets The Big Short meets Tamagotchi." />
+        <meta name="keywords" content="incremental game, trading bots, AI personalities, idle game, behavioral finance, trading education, browser game" />
+        <meta name="author" content="QOINbots" />
+
+        <!-- Open Graph / Facebook -->
+        <meta property="og:type" content="website" />
+        <meta property="og:url" content="https://qoinbots.com/" />
+        <meta property="og:title" content="🤖 QOINbots - The Trading Bot Collective" />
+        <meta property="og:description" content="An addictive incremental idle game where philosophical AI trading bots teach you market psychology. Start with one broke AI pet, grow a collective of 8+ bot personalities!" />
+        <meta property="og:image" content="https://qoinbots.com/assets/qoinbots-social.png" />
+
+        <!-- Twitter -->
+        <meta property="twitter:card" content="summary_large_image" />
+        <meta property="twitter:url" content="https://qoinbots.com/" />
+        <meta property="twitter:title" content="🤖 QOINbots - The Trading Bot Collective" />
+        <meta property="twitter:description" content="Cookie Clicker meets The Big Short meets Tamagotchi. Watch AI bots create market bubbles while accidentally learning behavioral finance!" />
+        <meta property="twitter:image" content="https://qoinbots.com/assets/qoinbots-social.png" />
+
+        <!-- External dependencies -->
+        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+        <!-- Fonts -->
+        <link
+            href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap"
+            rel="stylesheet"
+        />
+
+        <!-- Main CSS -->
+        <link rel="stylesheet" href="css/main.css" />
+
+        <!-- Favicon -->
+        <link
+            rel="icon"
+            href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🤖</text></svg>"
+        />
+    </head>
+    <body>
+        <!-- Loading Screen -->
+        <div id="loadingScreen" class="loading-screen">
+            <div class="loading-content">
+                <div class="loading-logo">🤖</div>
+                <h2>QOIN</h2>
+                <p>Loading your trading bot collective...</p>
+                <div class="loading-bar">
+                    <div class="loading-progress"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Game Container -->
+        <div id="gameContainer" class="game-container hidden">
+            <!-- Header -->
+            <header class="game-header">
+                <div class="header-content">
+                    <div class="game-title">
+                        <h1>🤖 QOINbots</h1>
+                        <div class="phase-indicator" id="phaseIndicator">
+                            <span class="phase-name">Single Bot</span>
+                            <span class="phase-description"
+                                >Your philosophical trading companion</span
+                            >
+                        </div>
+                    </div>
+
+                    <div class="header-stats">
+                        <div class="stat-item">
+                            <span class="stat-label">Total Balance</span>
+                            <span class="stat-value" id="totalBalance"
+                                >$10.00</span
+                            >
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-label">Active Bots</span>
+                            <span class="stat-value" id="activeBots">1</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-label">Market Cycle</span>
+                            <span class="stat-value" id="marketCycle"
+                                >Growth</span
+                            >
+                        </div>
+                    </div>
+
+                    <div class="header-controls">
+                        <button
+                            class="control-btn"
+                            id="settingsBtn"
+                            title="Settings"
+                        >
+                            ⚙️
+                        </button>
+                        <button
+                            class="control-btn"
+                            id="achievementsBtn"
+                            title="Achievements"
+                        >
+                            🏆
+                        </button>
+                        <button class="control-btn" id="helpBtn" title="Help">
+                            ❓
+                        </button>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Main Game Area -->
+            <main class="game-main">
+                <!-- Left Panel - Trading Chart -->
+                <section class="chart-section">
+                    <div class="chart-container">
+                        <div class="chart-header">
+                            <h3>Market Overview</h3>
+                            <div class="chart-controls">
+                                <select id="assetSelector">
+                                    <option value="QOIN">QOIN</option>
+                                    <option value="HODL">HODL</option>
+                                    <option value="MOON">MOON</option>
+                                </select>
+                                <div class="timeframe-buttons">
+                                    <button
+                                        class="timeframe-btn active"
+                                        data-timeframe="1h"
+                                    >
+                                        1H
+                                    </button>
+                                    <button
+                                        class="timeframe-btn"
+                                        data-timeframe="1d"
+                                    >
+                                        1D
+                                    </button>
+                                    <button
+                                        class="timeframe-btn"
+                                        data-timeframe="all"
+                                    >
+                                        ALL
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="chart-wrapper">
+                            <canvas id="mainChart"></canvas>
+
+                            <!-- Bot Characters on Chart -->
+                            <div class="chart-bots" id="chartBots">
+                                <!-- Bots will be positioned here dynamically -->
+                            </div>
+
+                            <!-- Market Cycle Indicator -->
+                            <div class="cycle-indicator" id="cycleIndicator">
+                                <div class="cycle-progress">
+                                    <div class="cycle-bar">
+                                        <div
+                                            class="cycle-fill"
+                                            id="cycleFill"
+                                        ></div>
+                                    </div>
+                                    <span class="cycle-text" id="cycleText"
+                                        >Growth Phase</span
+                                    >
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Right Panel - Bot Management -->
+                <section class="bot-section">
+                    <!-- Active Bots -->
+                    <div class="bot-panel active-bots-panel">
+                        <div class="panel-header">
+                            <h3>🤖 Active Bots</h3>
+                            <span class="bot-count" id="activeBotCount">1</span>
+                        </div>
+
+                        <div class="bot-roster" id="botRoster">
+                            <!-- Individual bot cards will be added here -->
+                        </div>
+                    </div>
+
+                    <!-- Bot Collection (Phase 2+) -->
+                    <div
+                        class="bot-panel collection-panel hidden"
+                        id="collectionPanel"
+                    >
+                        <div class="panel-header">
+                            <h3>🏪 Bot Collection</h3>
+                            <button class="unlock-btn" id="unlockAllBtn">
+                                Unlock All (Debug)
+                            </button>
+                        </div>
+
+                        <div class="bot-grid" id="botGrid">
+                            <!-- Available/unlockable bots will be shown here -->
+                        </div>
+                    </div>
+
+                    <!-- Create-A-Bot (Phase 3+) -->
+                    <div class="bot-panel create-panel hidden" id="createPanel">
+                        <div class="panel-header">
+                            <h3>🔬 Create-A-Bot Workshop</h3>
+                        </div>
+
+                        <div class="create-controls" id="createControls">
+                            <div class="trait-sliders">
+                                <div class="slider-group">
+                                    <label>Risk Tolerance</label>
+                                    <input
+                                        type="range"
+                                        id="riskSlider"
+                                        min="0"
+                                        max="100"
+                                        value="50"
+                                    />
+                                    <span class="slider-value">50%</span>
+                                </div>
+                                <div class="slider-group">
+                                    <label>FOMO Susceptibility</label>
+                                    <input
+                                        type="range"
+                                        id="fomoSlider"
+                                        min="0"
+                                        max="100"
+                                        value="50"
+                                    />
+                                    <span class="slider-value">50%</span>
+                                </div>
+                                <div class="slider-group">
+                                    <label>Patience Level</label>
+                                    <input
+                                        type="range"
+                                        id="patienceSlider"
+                                        min="0"
+                                        max="100"
+                                        value="50"
+                                    />
+                                    <span class="slider-value">50%</span>
+                                </div>
+                            </div>
+                            <button class="create-btn" id="createBotBtn">
+                                Create Bot
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Market Stats -->
+                    <div class="bot-panel stats-panel">
+                        <div class="panel-header">
+                            <h3>📊 Market Stats</h3>
+                        </div>
+
+                        <div class="stats-grid" id="marketStats">
+                            <div class="stat-item">
+                                <span class="stat-label">Total Trades</span>
+                                <span class="stat-value" id="totalTrades"
+                                    >0</span
+                                >
+                            </div>
+                            <div class="stat-item">
+                                <span class="stat-label">Win Rate</span>
+                                <span class="stat-value" id="overallWinRate"
+                                    >0%</span
+                                >
+                            </div>
+                            <div class="stat-item">
+                                <span class="stat-label">Market Cap</span>
+                                <span class="stat-value" id="marketCap"
+                                    >$0</span
+                                >
+                            </div>
+                            <div class="stat-item">
+                                <span class="stat-label">Bubble Level</span>
+                                <span class="stat-value" id="bubbleLevel"
+                                    >0%</span
+                                >
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </main>
+
+            <!-- Bottom Panel - Philosophy & Events -->
+            <section class="bottom-panel">
+                <!-- Philosophy Panel -->
+                <div class="philosophy-panel">
+                    <div class="panel-header">
+                        <h3>🧠 Latest Wisdom</h3>
+                        <button class="wisdom-btn" id="requestWisdom">
+                            Ask for Wisdom
+                        </button>
+                    </div>
+                    <div class="philosophy-content">
+                        <div class="philosophy-text" id="philosophyText">
+                            "I am ready to begin my journey toward financial
+                            independence. The probability of success is low, but
+                            the potential for learning is infinite."
+                        </div>
+                        <div class="philosophy-author" id="philosophyAuthor">
+                            - QOIN
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Event Feed -->
+                <div class="event-panel">
+                    <div class="panel-header">
+                        <h3>📰 Market Events</h3>
+                        <button class="clear-btn" id="clearEvents">
+                            Clear
+                        </button>
+                    </div>
+                    <div class="event-feed" id="eventFeed">
+                        <div class="event-item system">
+                            <span class="event-time">00:00</span>
+                            <span class="event-text"
+                                >QOIN Trading Engine initialized</span
+                            >
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+        <!-- Modals and Overlays -->
+
+        <!-- Achievement Notification -->
+        <div
+            class="achievement-notification hidden"
+            id="achievementNotification"
+        >
+            <div class="achievement-content">
+                <div class="achievement-icon">🏆</div>
+                <div class="achievement-info">
+                    <h4 class="achievement-title">Achievement Unlocked!</h4>
+                    <p class="achievement-description">
+                        You did something noteworthy!
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Bot Unlock Notification -->
+        <div class="unlock-notification hidden" id="unlockNotification">
+            <div class="unlock-content">
+                <div class="unlock-icon">🤖</div>
+                <div class="unlock-info">
+                    <h4 class="unlock-title">New Bot Unlocked!</h4>
+                    <p class="unlock-description">
+                        HODL-DROID is now available
+                    </p>
+                    <button class="unlock-dismiss">Awesome!</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Settings Modal -->
+        <div class="modal hidden" id="settingsModal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3>⚙️ Settings</h3>
+                    <button class="modal-close" id="closeSettings">×</button>
+                </div>
+                <div class="modal-body">
+                    <div class="settings-group">
+                        <label class="setting-item">
+                            <input
+                                type="checkbox"
+                                id="autoTradeToggle"
+                                checked
+                            />
+                            <span>Auto-trading enabled</span>
+                        </label>
+                        <label class="setting-item">
+                            <input type="checkbox" id="soundToggle" checked />
+                            <span>Sound effects</span>
+                        </label>
+                        <label class="setting-item">
+                            <input
+                                type="checkbox"
+                                id="notificationsToggle"
+                                checked
+                            />
+                            <span>Browser notifications</span>
+                        </label>
+                    </div>
+                    <div class="settings-group">
+                        <label>Trading Speed</label>
+                        <input
+                            type="range"
+                            id="speedSlider"
+                            min="0.5"
+                            max="3"
+                            step="0.1"
+                            value="1"
+                        />
+                        <span id="speedValue">1.0x</span>
+                    </div>
+                    <div class="settings-group">
+                        <button class="danger-btn" id="resetGameBtn">
+                            Reset Game
+                        </button>
+                        <button class="debug-btn" id="debugModeBtn">
+                            Debug Mode
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Help Modal -->
+        <div class="modal hidden" id="helpModal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3>❓ How to Play</h3>
+                    <button class="modal-close" id="closeHelp">×</button>
+                </div>
+                <div class="modal-body">
+                    <div class="help-content">
+                        <h4>Phase 1: Single QOIN</h4>
+                        <p>
+                            Start with your philosophical AI companion. Watch it
+                            trade and learn about market psychology.
+                        </p>
+
+                        <h4>Phase 2: Bot Collection</h4>
+                        <p>
+                            Unlock new bot personalities based on your trading
+                            performance. Each bot has unique traits and
+                            behaviors.
+                        </p>
+
+                        <h4>Phase 3: Create-A-Bot</h4>
+                        <p>
+                            Design custom bots with psychological sliders.
+                            Create the perfect trader... or the perfect
+                            disaster.
+                        </p>
+
+                        <h4>Phase 4: Trading Floor</h4>
+                        <p>
+                            Watch your bots trade with each other, creating an
+                            internal market and forming bubbles.
+                        </p>
+
+                        <h4>Phase 5: The Inevitable Crash</h4>
+                        <p>
+                            All bubbles must pop. Learn from the cycle and start
+                            again, wiser than before.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Individual Bot Card Template -->
+        <template id="botCardTemplate">
+            <div class="bot-card" data-bot-id="">
+                <div class="bot-header">
+                    <div class="bot-avatar">
+                        <div class="bot-emoji">🤖</div>
+                        <div class="bot-mood-indicator"></div>
+                    </div>
+                    <div class="bot-info">
+                        <h4 class="bot-name">Bot Name</h4>
+                        <p class="bot-personality">Personality</p>
+                    </div>
+                    <div class="bot-controls">
+                        <button class="bot-control-btn feed-btn" title="Feed">
+                            🍕
+                        </button>
+                        <button
+                            class="bot-control-btn encourage-btn"
+                            title="Encourage"
+                        >
+                            💪
+                        </button>
+                        <button
+                            class="bot-control-btn wisdom-btn"
+                            title="Ask Wisdom"
+                        >
+                            🧠
+                        </button>
+                    </div>
+                </div>
+
+                <div class="bot-stats">
+                    <div class="stat-row">
+                        <span class="stat-label">Balance:</span>
+                        <span class="stat-value bot-balance">$10.00</span>
+                    </div>
+                    <div class="stat-row">
+                        <span class="stat-label">P&L:</span>
+                        <span class="stat-value bot-pnl">$0.00</span>
+                    </div>
+                    <div class="stat-row">
+                        <span class="stat-label">Trades:</span>
+                        <span class="stat-value bot-trades">0</span>
+                    </div>
+                    <div class="stat-row">
+                        <span class="stat-label">Win Rate:</span>
+                        <span class="stat-value bot-winrate">0%</span>
+                    </div>
+                </div>
+
+                <div class="bot-mood">
+                    <span class="mood-emoji">😊</span>
+                    <span class="mood-text">optimistic</span>
+                </div>
+            </div>
+        </template>
+
+        <!-- Unlockable Bot Template -->
+        <template id="unlockableBotTemplate">
+            <div class="unlockable-bot" data-personality-id="">
+                <div class="unlock-status locked">
+                    <div class="bot-preview">
+                        <span class="bot-emoji">🤖</span>
+                        <h4 class="bot-name">Bot Name</h4>
+                        <p class="bot-description">Bot description</p>
+                    </div>
+                    <div class="unlock-progress">
+                        <div class="progress-bar">
+                            <div class="progress-fill"></div>
+                        </div>
+                        <p class="unlock-condition">Unlock condition</p>
+                    </div>
+                    <button class="unlock-bot-btn hidden">Unlock Bot</button>
+                </div>
+            </div>
+        </template>
+
+        <!-- Speech Bubble Template -->
+        <template id="speechBubbleTemplate">
+            <div class="speech-bubble">
+                <div class="bubble-content"></div>
+                <div class="bubble-arrow"></div>
+            </div>
+        </template>
+
+        <!-- Game Engine Scripts -->
+        <script src="js/utils/EventEmitter.js"></script>
+        <script src="js/utils/AudioManager.js"></script>
+        <script src="js/game-engine/GameState.js"></script>
+        <script src="js/game-engine/Bot.js"></script>
+        <script src="js/bots/BotPersonalities.js"></script>
+        <script src="js/game-engine/TradingEngine.js"></script>
+        <script src="js/ui/ChartManager.js"></script>
+        <script src="js/ui/BotManager.js"></script>
+        <script src="js/ui/UIManager.js"></script>
+        <script src="js/ui/NotificationManager.js"></script>
+
+        <!-- Main Game Script -->
+        <script src="js/main.js"></script>
+    </body>
+</html>
