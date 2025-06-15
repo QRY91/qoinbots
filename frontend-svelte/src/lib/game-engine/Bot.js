@@ -816,5 +816,7 @@ class Bot extends EventTarget {
   }
 }
 
+export default Bot;
+
 // Export for use in other modules
 window.Bot = Bot;

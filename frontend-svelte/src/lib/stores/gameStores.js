@@ -5,6 +5,10 @@ export const gameState = writable(null);
 export const tradingEngine = writable(null);
 export const audioManager = writable(null);
 
+// Internal references for gameActions
+let gameStateInstance = null;
+let tradingEngineInstance = null;
+
 // Bot management
 export const bots = writable([]);
 export const activeBots = derived(bots, ($bots) =>
@@ -65,11 +69,53 @@ export const gameStats = derived(
 export const gameActions = {
   // Add a new bot
   addBot: (botData) => {
+    // Add to GameState if available
+    if (gameStateInstance) {
+      gameStateInstance.addBot(botData);
+    }
+
+    // Add to TradingEngine if available
+    if (tradingEngineInstance) {
+      tradingEngineInstance.addBot(botData);
+    }
+
+    // Add to Svelte store
     bots.update((currentBots) => [...currentBots, botData]);
   },
 
   // Update specific bot
   updateBot: (botId, updates) => {
+    // Update in GameState if available
+    if (gameStateInstance) {
+      const gameBot = gameStateInstance.getBot(botId);
+      if (gameBot) {
+        // Update GameState bot stats
+        if (updates.balance !== undefined) {
+          gameBot.stats.balance = updates.balance;
+        }
+        if (updates.totalTrades !== undefined) {
+          gameBot.stats.trades = updates.totalTrades;
+        }
+        if (updates.totalProfit !== undefined) {
+          gameBot.stats.totalPnL = updates.totalProfit;
+        }
+        // Sync active state
+        if (updates.active !== undefined) {
+          gameBot.isActive = updates.active;
+        }
+        gameStateInstance.updateBotStats(botId, gameBot.stats);
+      }
+    }
+
+    // Update Bot instance in TradingEngine if available
+    if (tradingEngineInstance && updates.active !== undefined) {
+      const botInstance = tradingEngineInstance.activeBots.get(botId);
+      if (botInstance) {
+        botInstance.isActive = updates.active;
+      }
+    }
+
+    // Update Svelte store
     bots.update((currentBots) =>
       currentBots.map((bot) =>
         bot.id === botId ? { ...bot, ...updates } : bot,
@@ -150,10 +196,36 @@ export const gameActions = {
 
   // Initialize game
   initializeGame: (gameInstance, engineInstance, audioInstance) => {
+    // Store instances for internal use
+    gameStateInstance = gameInstance;
+    tradingEngineInstance = engineInstance;
+
+    // Set stores
     gameState.set(gameInstance);
     tradingEngine.set(engineInstance);
     audioManager.set(audioInstance);
     isGameLoaded.set(true);
+
+    // Sync existing bots if any
+    if (gameInstance) {
+      const gameBots = Object.values(gameInstance.getBots());
+      if (gameBots.length > 0) {
+        bots.set(
+          gameBots.map((bot) => ({
+            id: bot.id,
+            name: bot.name,
+            personality: bot.personality,
+            balance: bot.stats.balance,
+            active: bot.active,
+            totalTrades: bot.stats.trades,
+            totalProfit: bot.stats.totalPnL,
+            avatar: bot.avatar,
+            level: bot.level || 1,
+            experience: bot.experience || 0,
+          })),
+        );
+      }
+    }
   },
 };
 

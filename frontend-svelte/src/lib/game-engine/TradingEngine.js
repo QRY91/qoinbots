@@ -4,6 +4,7 @@
  */
 
 import EventEmitter from "./EventEmitter.js";
+import Bot from "./Bot.js";
 
 class TradingEngine extends EventEmitter {
   constructor(gameState) {
@@ -68,28 +69,28 @@ class TradingEngine extends EventEmitter {
   initializeMarket() {
     const baseAssets = {
       QOIN: {
-        price: 1.0,
+        price: 100.0,
         volume: 100,
         volatility: 0.3,
         trend: 0,
-        support: 0.5,
-        resistance: 2.0,
+        support: 50.0,
+        resistance: 200.0,
       },
       HODL: {
-        price: 50.0,
+        price: 2500.0,
         volume: 50,
         volatility: 0.1,
         trend: 0.1,
-        support: 30.0,
-        resistance: 100.0,
+        support: 1500.0,
+        resistance: 5000.0,
       },
       MOON: {
-        price: 0.001,
+        price: 25.0,
         volume: 1000,
         volatility: 0.8,
         trend: 0,
-        support: 0.0001,
-        resistance: 0.01,
+        support: 5.0,
+        resistance: 100.0,
       },
     };
 

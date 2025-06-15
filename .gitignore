@@ -5,6 +5,11 @@
 dist/
 build/
 *.tgz
+.svelte-kit/
+
+# TypeScript
+*.tsbuildinfo
+.tsc-cache/
 
 # Node.js
 node_modules/
@@ -65,6 +70,13 @@ Desktop.ini
 *.save
 *.backup
 
-# Optional: Keep these if you want to track them
-# But exclude if they get auto-generated
-# /frontend/assets/generated/
+# Development/Session files
+AI_SESSION_PROCEDURE.md
+*PROCEDURE.md
+
+# Svelte
+.svelte-kit/
+svelte.config.js.timestamp*
+
+# TypeScript incremental compilation
+tsconfig.tsbuildinfo

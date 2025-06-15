@@ -13,9 +13,26 @@ rm -rf build/
 # Create output directory
 mkdir -p dist/
 
-# Copy all frontend files to dist
-echo "📁 Copying frontend files..."
-cp -r frontend/* dist/
+# Build Svelte frontend
+echo "📁 Building Svelte frontend..."
+cd frontend-svelte
+
+# Install dependencies if node_modules doesn't exist
+if [ ! -d "node_modules" ]; then
+    echo "📦 Installing dependencies..."
+    npm install
+fi
+
+# Build the Svelte project
+echo "🔨 Building with Vite..."
+npm run build
+
+# Go back to root directory
+cd ..
+
+# Copy built files to dist
+echo "📁 Copying built files..."
+cp -r frontend-svelte/dist/* dist/
 
 # Copy root files that might be needed
 echo "📄 Copying root configuration files..."

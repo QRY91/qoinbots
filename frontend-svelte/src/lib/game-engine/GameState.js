@@ -48,8 +48,8 @@ class GameState extends EventTarget {
           isActive: true,
           unlocked: true,
           stats: {
-            balance: 10.0,
-            startingBalance: 10.0,
+            balance: 1000.0,
+            startingBalance: 1000.0,
             totalPnL: 0.0,
             trades: 0,
             wins: 0,
@@ -274,8 +274,8 @@ class GameState extends EventTarget {
       ...botData,
       unlocked: true,
       stats: {
-        balance: 10.0,
-        startingBalance: 10.0,
+        balance: 1000.0,
+        startingBalance: 1000.0,
         totalPnL: 0.0,
         trades: 0,
         wins: 0,
