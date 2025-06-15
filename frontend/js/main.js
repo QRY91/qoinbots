@@ -152,14 +152,16 @@ class QoinGame {
     this.debug.log("Initializing trading engine...");
 
     // Check if TradingEngine class is loaded
-    if (typeof TradingEngine === 'undefined') {
-      console.error("❌ TradingEngine class is not defined! Check script loading order.");
+    if (typeof TradingEngine === "undefined") {
+      console.error(
+        "❌ TradingEngine class is not defined! Check script loading order.",
+      );
       console.log("Available classes:", {
         GameState: typeof GameState,
         Bot: typeof Bot,
         BotPersonalities: typeof BotPersonalities,
         ChartManager: typeof ChartManager,
-        EventTarget: typeof EventTarget
+        EventTarget: typeof EventTarget,
       });
       throw new Error("TradingEngine class not loaded");
     }
@@ -178,15 +180,19 @@ class QoinGame {
       const { botId, trade } = event.detail;
       this.debug.log(`Bot ${botId} executed trade:`, trade);
 
-      // Update UI
+      // Update UI immediately for real-time feel
       if (this.uiManager) {
         this.uiManager.handleBotTrade(botId, trade);
+        // Force immediate critical UI updates
+        this.uiManager.updateCriticalUI();
       }
 
-      // Update chart
+      // Update chart immediately
       if (this.chartManager) {
         this.chartManager.addTradePoint(trade);
       }
+
+      // Bot manager updates handled by UI refresh
 
       // Play sound
       if (this.audioManager) {
@@ -225,7 +231,7 @@ class QoinGame {
       this.debug.log("Market phase changed:", event.detail);
 
       if (this.uiManager) {
-        this.uiManager.updateMarketPhase(event.detail);
+        this.uiManager.updatePhase(event.detail);
       }
     });
 
@@ -357,7 +363,10 @@ class QoinGame {
     console.log("🚀 Starting trading engine...");
     try {
       this.tradingEngine.start();
-      console.log("✅ Trading engine started successfully, isRunning:", this.tradingEngine.isRunning);
+      console.log(
+        "✅ Trading engine started successfully, isRunning:",
+        this.tradingEngine.isRunning,
+      );
     } catch (error) {
       console.error("❌ Failed to start trading engine:", error);
     }
@@ -380,7 +389,7 @@ class QoinGame {
       tradingEngineRunning: this.tradingEngine?.isRunning,
       activeBots: this.tradingEngine?.activeBots?.size || 0,
       gameStateReady: !!this.gameState,
-      totalBots: Object.keys(this.gameState?.getBots() || {}).length
+      totalBots: Object.keys(this.gameState?.getBots() || {}).length,
     });
 
     await this.delay(300);
@@ -546,7 +555,7 @@ class QoinGame {
       // Add debug methods
       this.testOfflineProgress = (minutes = 30) => {
         console.log(`🧪 Testing offline progress for ${minutes} minutes...`);
-        const fakeLastSaved = Date.now() - (minutes * 60 * 1000);
+        const fakeLastSaved = Date.now() - minutes * 60 * 1000;
         this.gameState.calculateOfflineProgress(fakeLastSaved);
       };
 
@@ -558,14 +567,18 @@ class QoinGame {
           botManager: !!this.botManager,
           audioManager: !!this.audioManager,
           botPersonalities: !!this.botPersonalities,
-          activeBots: this.tradingEngine ? this.tradingEngine.activeBots.size : 0,
-          totalBots: this.gameState ? Object.keys(this.gameState.getBots()).length : 0,
+          activeBots: this.tradingEngine
+            ? this.tradingEngine.activeBots.size
+            : 0,
+          totalBots: this.gameState
+            ? Object.keys(this.gameState.getBots()).length
+            : 0,
           isRunning: this.tradingEngine ? this.tradingEngine.isRunning : false,
-          tickRate: this.tradingEngine ? this.tradingEngine.tickRate : 'N/A'
+          tickRate: this.tradingEngine ? this.tradingEngine.tickRate : "N/A",
         });
       };
 
-      this.forceTrade = (botId = 'qoin') => {
+      this.forceTrade = (botId = "qoin") => {
         console.log(`🔨 Forcing trade for bot: ${botId}`);
         if (!this.tradingEngine) {
           console.log(`❌ Trading engine not initialized yet`);
@@ -593,22 +606,55 @@ class QoinGame {
               name: bot.name,
               balance: bot.stats.balance,
               isActive: bot.isActive,
-              lastTrade: new Date(bot.lastTradeTime).toLocaleTimeString()
+              lastTrade: new Date(bot.lastTradeTime).toLocaleTimeString(),
             });
           }
         } else {
           console.log(`❌ Bot ${botId} not found in active bots`);
-          console.log(`Available bots:`, Array.from(this.tradingEngine.activeBots.keys()));
+          console.log(
+            `Available bots:`,
+            Array.from(this.tradingEngine.activeBots.keys()),
+          );
         }
       };
 
       this.makeBotsChat = () => {
         console.log(`💬 Making all bots chat...`);
-        Object.keys(this.gameState.getBots()).forEach(botId => {
+        Object.keys(this.gameState.getBots()).forEach((botId) => {
           if (this.botManager) {
             this.botManager.requestWisdom(botId);
           }
         });
+      };
+
+      this.restartTrading = () => {
+        console.log(`🔄 Restarting trading for all bots...`);
+        if (!this.tradingEngine) {
+          console.log(`❌ Trading engine not initialized yet`);
+          return;
+        }
+
+        // Reset lastTradeTime for all active bots
+        this.tradingEngine.activeBots.forEach((bot, botId) => {
+          const oldTime = bot.lastTradeTime;
+          bot.lastTradeTime = Date.now() - bot.getTradeDelay() - 1000; // Allow immediate trading
+          console.log(
+            `🔄 Reset ${bot.name} trade timer: ${new Date(oldTime).toLocaleTimeString()} → ${new Date(bot.lastTradeTime).toLocaleTimeString()}`,
+          );
+        });
+
+        // Force a trading engine tick
+        if (this.tradingEngine.isRunning) {
+          console.log(`⚡ Forcing immediate trading tick...`);
+          this.tradingEngine.tick();
+        } else {
+          console.log(`⚠️ Trading engine is not running - starting it...`);
+          this.tradingEngine.start();
+        }
+
+        console.log(
+          `✅ Trading restart complete - ${this.tradingEngine.activeBots.size} bots ready to trade`,
+        );
       };
 
       this.speedUpTrading = (multiplier = 5) => {
@@ -706,7 +752,7 @@ class QoinGame {
    * Set up offline progress listener
    */
   setupOfflineProgressListener() {
-    this.gameState.addEventListener('offline_progress_calculated', (event) => {
+    this.gameState.addEventListener("offline_progress_calculated", (event) => {
       const { timeAway, tradesSimulated } = event.detail;
       this.showWelcomeBackScreen(timeAway, tradesSimulated);
     });
@@ -719,8 +765,8 @@ class QoinGame {
     if (minutesAway < 1) return; // Don't show for very short absences
 
     // Create welcome back modal
-    const modal = document.createElement('div');
-    modal.className = 'welcome-back-modal';
+    const modal = document.createElement("div");
+    modal.className = "welcome-back-modal";
     modal.innerHTML = `
       <div class="welcome-back-content">
         <div class="welcome-back-header">
@@ -781,7 +827,7 @@ class QoinGame {
     `;
 
     // Add CSS for the modal content
-    const style = document.createElement('style');
+    const style = document.createElement("style");
     style.textContent = `
       .welcome-back-content {
         background: linear-gradient(135deg, #1a1a2e, #16213e);
@@ -907,11 +953,15 @@ class QoinGame {
     } else if (minutes < 1440) {
       const hours = Math.floor(minutes / 60);
       const remainingMinutes = minutes % 60;
-      return remainingMinutes > 0 ? `${hours}h ${remainingMinutes}m` : `${hours} hours`;
+      return remainingMinutes > 0
+        ? `${hours}h ${remainingMinutes}m`
+        : `${hours} hours`;
     } else {
       const days = Math.floor(minutes / 1440);
       const remainingHours = Math.floor((minutes % 1440) / 60);
-      return remainingHours > 0 ? `${days}d ${remainingHours}h` : `${days} days`;
+      return remainingHours > 0
+        ? `${days}d ${remainingHours}h`
+        : `${days} days`;
     }
   }
 
@@ -925,7 +975,10 @@ class QoinGame {
     }, 2000);
 
     setTimeout(() => {
-      this.showActionHint("Try feeding, encouraging, or asking for wisdom!", "💡");
+      this.showActionHint(
+        "Try feeding, encouraging, or asking for wisdom!",
+        "💡",
+      );
     }, 5000);
 
     setTimeout(() => {
@@ -1028,11 +1081,20 @@ class QoinGame {
 
     // Show progress hints based on current state
     if (totalTrades >= 5 && totalTrades < 10 && unlockedBots === 1) {
-      this.showActionHint("You're getting close to unlocking your first new bot! Keep trading!", "🔓");
+      this.showActionHint(
+        "You're getting close to unlocking your first new bot! Keep trading!",
+        "🔓",
+      );
     } else if (totalLosses >= 2 && unlockedBots === 1) {
-      this.showActionHint("HODL-DROID unlocks after 3 losses - diamond hands incoming! 💎", "🤖");
+      this.showActionHint(
+        "HODL-DROID unlocks after 3 losses - diamond hands incoming! 💎",
+        "🤖",
+      );
     } else if (this.gameState.getLowestBalance() < 5 && unlockedBots === 1) {
-      this.showActionHint("Your balance is getting low - Panic Pete might unlock soon! 😱", "💸");
+      this.showActionHint(
+        "Your balance is getting low - Panic Pete might unlock soon! 😱",
+        "💸",
+      );
     }
   }
 
