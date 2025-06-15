@@ -1,0 +1,41 @@
+{
+  "name": "qoinbots-svelte",
+  "version": "1.0.0",
+  "description": "🤖 QOINbots - Svelte Migration - An addictive incremental idle game where philosophical AI trading bots teach you market psychology",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "serve": "vite preview --port 3000",
+    "start": "npm run dev"
+  },
+  "keywords": [
+    "incremental-game",
+    "idle-game",
+    "trading-bots",
+    "ai-personalities",
+    "behavioral-finance",
+    "browser-game",
+    "educational-game",
+    "svelte",
+    "vite"
+  ],
+  "author": "QOINbots Team",
+  "license": "MIT",
+  "dependencies": {
+    "svelte": "^5.34.3"
+  },
+  "devDependencies": {
+    "@sveltejs/vite-plugin-svelte": "^4.0.1",
+    "vite": "^5.0.11"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "browserslist": [
+    "> 1%",
+    "last 2 versions",
+    "not dead"
+  ]
+}
